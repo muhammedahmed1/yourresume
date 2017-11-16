@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - @System.Configuration.ConfigurationManager.AppSettings.Get("ProjectName")</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <link href="~/Content/sweetalert.css" rel="stylesheet" />
+    <style>
+        #myIframe {
+            display: block;
+            width: 100%;
+            min-height: 500px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink(System.Configuration.ConfigurationManager.AppSettings.Get("ProjectName"), "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+    </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body" style="overflow:auto;min-height:500px;" id="divBody">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/sweetalert.min.js"></script>
+    <script src="~/Scripts/gdocsviewer.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(document).on('click', '#btnGo', function () {
+                swal({
+                    title: "Alert",
+                    text: "Hello World! Are you ready to view my resume?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No',
+                    confirmButtonClass: 'btn btn- danger',
+                    closeOnConfirm: true,
+                    html: false
+                }, function () {
+                    $('#myModal').modal();
+                    $('#divBody').html('<div class="alert alert-danger text-center">Please Wait</div>');
+                    $.ajax({
+                        url: "/Home/GetDocumentFileName", success: function (result) {
+                            $('#divBody').html(' <iframe id="myIframe" scrolling="no" frameborder="0" src="/' + result.document + '"></iframe> ')
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
